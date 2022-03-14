@@ -9,5 +9,5 @@ public interface IPostService {
     //Page<Post> listPost(@Param("search") String search, int page, int size);
     Page<Post> listPost(int page, int size);
 
-
+    Post findById(Long id) throws Exception;
 }

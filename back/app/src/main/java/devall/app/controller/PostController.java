@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-//import org.modelmapper.ModelMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,8 @@ public class PostController {
     @Autowired
     private IPostService postService;
 
-    // @Autowired
-    // private ModelMapper modelMapper;
+     @Autowired
+     private ModelMapper modelMapper;
 
     PostController(IPostService postService) {
         this.postService = postService;
@@ -43,65 +43,63 @@ public class PostController {
     ResponseEntity<Map<String, Object>> listPostPaginated(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "30") int size) {
         try {
-            // repositoy.listPostPaginated();
-            // Pageable paging = PageRequest.of(page, size);
-            List<Post> posts = new ArrayList<Post>();
-            Page<Post> pagePost;
-            pagePost = postService.listPost(page, size);
-            posts = pagePost.getContent();
-            List<PostDto> postss = posts.stream().map(this::convertToDto) .collect(Collectors.toList());
-            System.out.println(postss);
-            
-            SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                    SimpleBeanPropertyFilter.serializeAllExcept("url");
-            FilterProvider filters = new SimpleFilterProvider()
-                    .addFilter("myFilter", simpleBeanPropertyFilter);
-            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(postss);
-            mappingJacksonValue.setFilters(filters);
-            System.out.println(mappingJacksonValue);
-            //posts = mappingJacksonValue;
-            
+            List<PostDto> posts = new ArrayList<PostDto>();
+            Page<Post> pagePost = postService.listPost(page, size);
+            posts = pagePost.getContent()
+                            .stream()
+                            .map(post -> {
+                                post.setUrl(null);
+                                return modelMapper.map(post, PostDto.class);
+                            })
+                            .collect(Collectors.toList());
 
             Map<String, Object> response = new HashMap<>();
-            response.put("posts", postss);
+            response.put("posts", posts);
             response.put("currentPage", pagePost.getNumber());
             response.put("totalItems", pagePost.getTotalElements());
             response.put("totalPages", pagePost.getTotalPages());
             response.put("perPage", pagePost.getSize());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
             System.out.println(e.getMessage());
             System.out.println(e.getCause());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/clique/{id}")
-    public ResponseEntity<Map<String, Object>> postClicque(@PathVariable String id){
-        try{
+    public ResponseEntity<Map<String, Object>> postClicque(@PathVariable String id) {
+        try {
 
+            Post post = postService.findById(Long.parseLong(id));
+            PostDto postDto = modelMapper.map(post, PostDto.class);
+            post = null;
             Map<String, Object> response = new HashMap<>();
-
+            response.put("post", postDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch(Exception e){
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
             System.out.println(e.getMessage());
             System.out.println(e.getCause());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
+
     }
 
-    private PostDto convertToDto(Post post) {
-        PostDto postDto = PostDto.transformaEmDTO(post);
-        // postDto.setSubmissionDate(post.getSubmissionDate(), 
-        //     userService.getCurrentUser().getPreference().getTimezone());
-        return postDto;
-    }
+//    private PostDto convertToDto(Post post) {
+//        PostDto postDto = modelMapper.map(post, PostDto.class);
+//        postDto.setDataInclusao(post.getDataInclusao(),
+//                userService.getCurrentUser().getPreference().getTimezone());
+//        return postDto;
+//    }
 
     // private PostDto convertToDto(Post post) {
-    //     PostDto postDto = modelMapper.map(post, PostDto.class);
-    //     // postDto.setSubmissionDate(post.getSubmissionDate(), 
-    //     //     userService.getCurrentUser().getPreference().getTimezone());
-    //     return postDto;
+    // PostDto postDto = modelMapper.map(post, PostDto.class);
+    // // postDto.setSubmissionDate(post.getSubmissionDate(),
+    // // userService.getCurrentUser().getPreference().getTimezone());
+    // return postDto;
     // }
 }

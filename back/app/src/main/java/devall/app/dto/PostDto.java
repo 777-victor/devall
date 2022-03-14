@@ -3,42 +3,19 @@ package devall.app.dto;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 import devall.app.model.Post;
+import devall.app.model.Site;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@JsonFilter("myFilter")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostDto {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    // public Date getDataInclusaoConverted(String timezone) throws ParseException {
-    // dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
-    // return dateFormat.parse(this.dataInclusao);
-    // }
-    // public Date getDataInclusaoConverted(String timezone) throws ParseException {
-    // dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
-    // return dateFormat.parse(this.dataInclusao);
-    // }
-
-    public PostDto(Long id, String resumo, String titulo, Integer cliques, Date dataInclusao, Date dataPublicacao,
-            Integer votosNegativos, Integer votosPositivos, Long favoritos, Long comentarios, String url) {
-        this.setId(id);
-        this.setResumo(resumo);
-        this.setTitulo(titulo);
-        this.setCliques(cliques);
-        this.setDataInclusao(dataInclusao);
-        this.setDataPublicacao(dataPublicacao);
-        this.setVotosNegativos(votosNegativos);
-        this.setVotosPositivos(votosPositivos);
-        this.setFavoritos(favoritos);
-        this.setComentarios(comentarios);
-        this.setUrl(url);
-    }
-
-    public static PostDto transformaEmDTO(Post post) {
-        return new PostDto(post.getId(), post.getResumo(), post.getTitulo(), post.getCliques(), post.getDataInclusao(),
-                post.getDataPublicacao(), post.getVotosNegativos(), post.getVotosPositivos(), post.getFavoritos(),
-                post.getComentarios(), post.getUrl());
-    }
 
     private Long id;
 
@@ -61,6 +38,8 @@ public class PostDto {
     private Long comentarios = 0l;
 
     private String url;
+
+    private Site blog;
 
     public Long getId() {
         return this.id;
@@ -139,8 +118,8 @@ public class PostDto {
     }
 
     public void setComentarios(Long comentarios) {
-		this.comentarios = comentarios;
-	}
+        this.comentarios = comentarios;
+    }
 
     public String getUrl() {
         return this.url;
@@ -150,4 +129,11 @@ public class PostDto {
         this.url = url;
     }
 
+    public Site getBlog() {
+        return blog;
+    }
+
+    public void setBlog(Site blog) {
+        this.blog = blog;
+    }
 }

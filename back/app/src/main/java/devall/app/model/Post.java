@@ -1,5 +1,8 @@
 package devall.app.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "blog_post")
 public class Post{
     @Id 
