@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -48,18 +49,21 @@ public class PostController {
             Page<Post> pagePost;
             pagePost = postService.listPost(page, size);
             posts = pagePost.getContent();
-
+            List<PostDto> postss = posts.stream().map(this::convertToDto) .collect(Collectors.toList());
+            System.out.println(postss);
+            
             SimpleBeanPropertyFilter simpleBeanPropertyFilter =
                     SimpleBeanPropertyFilter.serializeAllExcept("url");
             FilterProvider filters = new SimpleFilterProvider()
-                    .addFilter("userFilter", simpleBeanPropertyFilter);
-            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(posts);
+                    .addFilter("myFilter", simpleBeanPropertyFilter);
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(postss);
             mappingJacksonValue.setFilters(filters);
             System.out.println(mappingJacksonValue);
             //posts = mappingJacksonValue;
+            
 
             Map<String, Object> response = new HashMap<>();
-            response.put("posts", posts);
+            response.put("posts", postss);
             response.put("currentPage", pagePost.getNumber());
             response.put("totalItems", pagePost.getTotalElements());
             response.put("totalPages", pagePost.getTotalPages());
@@ -86,7 +90,14 @@ public class PostController {
         }
         
     }
-    
+
+    private PostDto convertToDto(Post post) {
+        PostDto postDto = PostDto.transformaEmDTO(post);
+        // postDto.setSubmissionDate(post.getSubmissionDate(), 
+        //     userService.getCurrentUser().getPreference().getTimezone());
+        return postDto;
+    }
+
     // private PostDto convertToDto(Post post) {
     //     PostDto postDto = modelMapper.map(post, PostDto.class);
     //     // postDto.setSubmissionDate(post.getSubmissionDate(), 

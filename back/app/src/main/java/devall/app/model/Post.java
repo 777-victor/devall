@@ -55,6 +55,14 @@ public class Post{
         this.resumo = resumo;
     }
 
+    public String getTitulo() {
+        return this.titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
     public Integer getCliques() {
         return this.cliques;
     }

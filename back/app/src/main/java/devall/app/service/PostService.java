@@ -1,15 +1,9 @@
 package devall.app.service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import devall.app.model.Post;
 import devall.app.repository.PostRepository;
@@ -25,7 +19,7 @@ public class PostService implements IPostService {
 
         PageRequest paging = PageRequest.of(page, size, Sort.by("dataPublicacao").descending());
         Page<Post> posts = postRepository.findAll( paging );
-
+        
         return posts;
     }
 

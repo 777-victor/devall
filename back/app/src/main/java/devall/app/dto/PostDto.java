@@ -1,25 +1,44 @@
 package devall.app.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonFilter;
 
-import java.text.ParseException;
+import devall.app.model.Post;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 @JsonFilter("myFilter")
 public class PostDto {
-    //private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     // public Date getDataInclusaoConverted(String timezone) throws ParseException {
-    //     dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
-    //     return dateFormat.parse(this.dataInclusao);
+    // dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
+    // return dateFormat.parse(this.dataInclusao);
+    // }
+    // public Date getDataInclusaoConverted(String timezone) throws ParseException {
+    // dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
+    // return dateFormat.parse(this.dataInclusao);
     // }
 
-    // public Date getDataInclusaoConverted(String timezone) throws ParseException {
-    //     dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
-    //     return dateFormat.parse(this.dataInclusao);
-    // }
+    public PostDto(Long id, String resumo, String titulo, Integer cliques, Date dataInclusao, Date dataPublicacao,
+            Integer votosNegativos, Integer votosPositivos, Long favoritos, Long comentarios, String url) {
+        this.setId(id);
+        this.setResumo(resumo);
+        this.setTitulo(titulo);
+        this.setCliques(cliques);
+        this.setDataInclusao(dataInclusao);
+        this.setDataPublicacao(dataPublicacao);
+        this.setVotosNegativos(votosNegativos);
+        this.setVotosPositivos(votosPositivos);
+        this.setFavoritos(favoritos);
+        this.setComentarios(comentarios);
+        this.setUrl(url);
+    }
+
+    public static PostDto transformaEmDTO(Post post) {
+        return new PostDto(post.getId(), post.getResumo(), post.getTitulo(), post.getCliques(), post.getDataInclusao(),
+                post.getDataPublicacao(), post.getVotosNegativos(), post.getVotosPositivos(), post.getFavoritos(),
+                post.getComentarios(), post.getUrl());
+    }
 
     private Long id;
 
@@ -37,7 +56,9 @@ public class PostDto {
 
     private Integer votosPositivos;
 
-    private Long favoritos = 0l, comentarios = 0l;
+    private Long favoritos = 0l;
+
+    private Long comentarios = 0l;
 
     private String url;
 
@@ -77,16 +98,16 @@ public class PostDto {
         return this.dataInclusao;
     }
 
-    public void setDataInclusao(String dataInclusao) {
-        this.dataInclusao = dataInclusao;
+    public void setDataInclusao(Date dataInclusao) {
+        this.dataInclusao = dateFormat.format(dataInclusao);
     }
 
     public String getDataPublicacao() {
         return this.dataPublicacao;
     }
 
-    public void setDataPublicacao(String dataPublicacao) {
-        this.dataPublicacao = dataPublicacao;
+    public void setDataPublicacao(Date dataPublicacao) {
+        this.dataPublicacao = dateFormat.format(dataPublicacao);
     }
 
     public Integer getVotosNegativos() {
@@ -112,6 +133,14 @@ public class PostDto {
     public void setFavoritos(Long favoritos) {
         this.favoritos = favoritos;
     }
+
+    public Long getComentarios() {
+        return this.comentarios;
+    }
+
+    public void setComentarios(Long comentarios) {
+		this.comentarios = comentarios;
+	}
 
     public String getUrl() {
         return this.url;
