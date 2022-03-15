@@ -40,11 +40,13 @@ public class PostController {
     }
 
     @GetMapping
-    ResponseEntity<Map<String, Object>> listPostPaginated(@RequestParam(defaultValue = "0") int page,
+    ResponseEntity<Map<String, Object>> listPostPaginated(
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "30") int size) {
         try {
             List<PostDto> posts = new ArrayList<PostDto>();
-            Page<Post> pagePost = postService.listPost(page, size);
+            Page<Post> pagePost = postService.listPost(search, page, size);
             posts = pagePost.getContent()
                             .stream()
                             .map(post -> {
@@ -63,14 +65,12 @@ public class PostController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", e.getMessage());
-            System.out.println(e.getMessage());
-            System.out.println(e.getCause());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/clique/{id}")
-    public ResponseEntity<Map<String, Object>> postClicque(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> postClique(@PathVariable String id) {
         try {
 
             Post post = postService.findById(Long.parseLong(id));
@@ -82,8 +82,6 @@ public class PostController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", e.getMessage());
-            System.out.println(e.getMessage());
-            System.out.println(e.getCause());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

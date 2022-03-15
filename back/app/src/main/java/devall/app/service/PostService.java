@@ -17,10 +17,10 @@ public class PostService implements IPostService {
     private PostRepository postRepository;
 
     @Override
-    public Page<Post> listPost( int page, int size) {
+    public Page<Post> listPost( String search, int page, int size) {
 
         PageRequest paging = PageRequest.of(page, size, Sort.by("dataPublicacao").descending());
-        Page<Post> posts = postRepository.findAll( paging );
+        Page<Post> posts = postRepository.findAll( search, paging );
 
         return posts;
     }
@@ -33,15 +33,5 @@ public class PostService implements IPostService {
         }
         return post.get();
     }
-
-    // public static Specification<Post> searchByTituloOrResumo(String search){
-    //     return new Specification<Post>(){
-    //         public Predicate toPredicate(Root<Post> root, CriteriaQuery<?> query,
-    //         CriteriaBuilder builder) {
-
-    //             // build query here
-    //         }
-    //     }
-    // }
 
 }

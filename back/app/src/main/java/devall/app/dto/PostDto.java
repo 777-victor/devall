@@ -9,7 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class PostDto {
 
     private String titulo;
 
-    private Integer cliques = 0;
+    private Integer cliques;
 
     private String dataInclusao;
 
@@ -33,9 +35,9 @@ public class PostDto {
 
     private Integer votosPositivos;
 
-    private Long favoritos = 0l;
+    private Long favoritos;
 
-    private Long comentarios = 0l;
+    private Long comentarios;
 
     private String url;
 
@@ -78,6 +80,7 @@ public class PostDto {
     }
 
     public void setDataInclusao(Date dataInclusao) {
+        dateFormat.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
         this.dataInclusao = dateFormat.format(dataInclusao);
     }
 
@@ -86,6 +89,7 @@ public class PostDto {
     }
 
     public void setDataPublicacao(Date dataPublicacao) {
+        dateFormat.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
         this.dataPublicacao = dateFormat.format(dataPublicacao);
     }
 

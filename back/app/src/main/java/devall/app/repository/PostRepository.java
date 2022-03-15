@@ -5,11 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import devall.app.model.Post;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 
 public interface PostRepository extends JpaRepository<Post, Long>{
-    
-    //Page<Post> findPaginated(PageRequest pageReq);
-    Page<Post> findAll(Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.titulo like CONCAT('%',:search,'%') or p.resumo like CONCAT('%',:search,'%')")
+    Page<Post> findAll(@Param("search") String search, Pageable pageable);
 
 }
