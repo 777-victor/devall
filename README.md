@@ -1,10 +1,11 @@
 # devall
 
 ## Front
+
 Optei por utilizar o nuxt ( framework para vue ) para criar o projeto e o vuetify para desenvolver as páginas,
 como eu já estou familiarizado com essas tecnologias não tiver problemas no desenvolver do frontend. O único obstáculo foi implementar
 a paginação que estava oculta na documentação e não é retornado na resposa.
----
+
 
 ## Back
 
